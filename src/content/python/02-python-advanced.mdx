@@ -1,0 +1,251 @@
+---
+title: Python进阶用法
+description: 学习Python的面向对象编程、模块和包管理
+date: '2023-05-14'
+tags: ['python', '进阶', 'OOP']
+level: '中级'
+order: 2
+---
+
+# Python进阶用法
+
+在掌握了Python的基础知识后，现在我们来探索一些更高级的概念，这些概念将帮助您编写更加结构化和可维护的代码。
+
+## 1. 面向对象编程
+
+Python是一种强大的面向对象编程语言。下面是一个简单的类定义示例：
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        
+    def greet(self):
+        return f"你好，我是{self.name}，今年{self.age}岁。"
+
+# 创建Person类的实例
+person1 = Person("张三", 30)
+print(person1.greet())  # 输出: 你好，我是张三，今年30岁。
+```
+
+### 继承
+
+继承允许我们基于现有类定义新类：
+
+```python
+class Student(Person):
+    def __init__(self, name, age, student_id):
+        super().__init__(name, age)  # 调用父类的__init__方法
+        self.student_id = student_id
+        
+    def study(self, subject):
+        return f"{self.name}正在学习{subject}。"
+
+# 创建Student类的实例
+student1 = Student("李四", 20, "S12345")
+print(student1.greet())  # 从Person类继承的方法
+print(student1.study("Python"))  # Student类的方法
+```
+
+### 封装和私有属性
+
+在Python中，我们使用下划线前缀来表示私有属性：
+
+```python
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self._balance = balance  # 约定俗成的"私有"属性
+        
+    def deposit(self, amount):
+        if amount > 0:
+            self._balance += amount
+            return f"存入{amount}元，当前余额为{self._balance}元"
+        return "存款金额必须大于0"
+        
+    def withdraw(self, amount):
+        if 0 < amount <= self._balance:
+            self._balance -= amount
+            return f"取出{amount}元，当前余额为{self._balance}元"
+        return "余额不足或取款金额无效"
+        
+    def get_balance(self):
+        return self._balance
+```
+
+## 2. 模块和包
+
+### 使用模块
+
+Python模块是一个包含Python定义和语句的文件。例如，创建一个名为`calculator.py`的文件：
+
+```python
+# calculator.py
+def add(a, b):
+    return a + b
+    
+def subtract(a, b):
+    return a - b
+    
+def multiply(a, b):
+    return a * b
+    
+def divide(a, b):
+    if b != 0:
+        return a / b
+    return "错误：除数不能为零"
+```
+
+然后在另一个文件中导入并使用它：
+
+```python
+# 导入整个模块
+import calculator
+print(calculator.add(5, 3))  # 8
+
+# 导入特定函数
+from calculator import multiply
+print(multiply(4, 2))  # 8
+
+# 导入所有函数
+from calculator import *
+print(subtract(10, 5))  # 5
+```
+
+### 创建包
+
+包是一种组织相关模块的方式。创建一个包需要一个包含`__init__.py`文件的目录：
+
+```
+mypackage/
+    __init__.py
+    module1.py
+    module2.py
+    subpackage/
+        __init__.py
+        module3.py
+```
+
+使用包中的模块：
+
+```python
+# 导入包中的模块
+import mypackage.module1
+mypackage.module1.function1()
+
+# 从包中导入特定模块
+from mypackage import module2
+module2.function2()
+
+# 从包中的模块导入特定函数
+from mypackage.subpackage.module3 import function3
+function3()
+```
+
+## 3. 文件操作
+
+Python提供了简单的方式来处理文件：
+
+```python
+# 写入文件
+with open('example.txt', 'w', encoding='utf-8') as file:
+    file.write('这是一行文本。\n')
+    file.write('这是另一行文本。')
+
+# 读取文件
+with open('example.txt', 'r', encoding='utf-8') as file:
+    content = file.read()
+    print(content)
+
+# 逐行读取
+with open('example.txt', 'r', encoding='utf-8') as file:
+    for line in file:
+        print(line.strip())  # strip()去除每行末尾的换行符
+```
+
+## 4. 高级函数特性
+
+### 装饰器
+
+装饰器是一种强大的工具，允许您修改函数的行为：
+
+```python
+def timer(func):
+    """一个计算函数执行时间的装饰器"""
+    import time
+    
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"函数{func.__name__}执行耗时: {end_time - start_time:.4f}秒")
+        return result
+    
+    return wrapper
+
+@timer
+def slow_function(n):
+    """一个执行慢操作的示例函数"""
+    import time
+    time.sleep(n)  # 睡眠n秒
+    return f"操作完成，耗时{n}秒"
+
+# 使用装饰器的函数
+print(slow_function(1))
+```
+
+### 生成器
+
+生成器是一种特殊的迭代器，使用`yield`语句：
+
+```python
+def fibonacci(n):
+    """生成斐波那契数列的前n个数"""
+    a, b = 0, 1
+    count = 0
+    while count < n:
+        yield a
+        a, b = b, a + b
+        count += 1
+
+# 使用生成器
+for num in fibonacci(10):
+    print(num, end=' ')  # 输出: 0 1 1 2 3 5 8 13 21 34
+```
+
+## 5. 异步编程
+
+Python 3.5+提供了`async`和`await`关键字支持异步编程：
+
+```python
+import asyncio
+
+async def say_after(delay, what):
+    await asyncio.sleep(delay)
+    print(what)
+
+async def main():
+    print("开始执行")
+    
+    # 顺序执行
+    await say_after(1, "你好")
+    await say_after(1, "世界")
+    
+    print("顺序执行完成")
+    
+    # 并发执行
+    task1 = asyncio.create_task(say_after(1, "你好"))
+    task2 = asyncio.create_task(say_after(1, "世界"))
+    
+    await task1
+    await task2
+    
+    print("并发执行完成")
+
+asyncio.run(main())
+```
+
+## 下一步
+
+恭喜您学习了Python的进阶概念！下一步，您可以探索专业领域的Python应用，如数据分析、机器学习、Web开发等。 

@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@layer base {
+  body {
+    @apply transition-colors duration-200;
+  }
+}
+
+/* 语法高亮样式 */
+pre code.hljs {
+  display: block;
+  padding: 1em;
+  overflow-x: auto;
+}
+
+.hljs {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.dark .hljs {
+  background: #1f2937;
+  color: #e5e7eb;
+}
+
+/* 基础语法高亮颜色 */
+.hljs-comment,
+.hljs-quote {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #7c3aed;
+}
+
+.hljs-literal,
+.hljs-number {
+  color: #2563eb;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp {
+  color: #059669;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #d97706;
+}
+
+.hljs-title.class_ {
+  color: #2563eb;
+}
+
+.hljs-attribute,
+.hljs-name,
+.hljs-tag {
+  color: #dc2626;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #7f1d1d;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0284c7;
+}
+
+/* 暗色模式下的颜色调整 */
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #9ca3af;
+}
+
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-subst {
+  color: #a78bfa;
+}
+
+.dark .hljs-string,
+.dark .hljs-doctag,
+.dark .hljs-regexp {
+  color: #34d399;
+}
+
+.dark .hljs-title,
+.dark .hljs-section,
+.dark .hljs-selector-id {
+  color: #fbbf24;
+}
+
+.dark .hljs-title.class_ {
+  color: #60a5fa;
+}
+
+.dark .hljs-literal,
+.dark .hljs-number {
+  color: #93c5fd;
+}
+
+.dark .hljs-attribute,
+.dark .hljs-name,
+.dark .hljs-tag {
+  color: #f87171;
+}
+
+.dark .hljs-variable,
+.dark .hljs-template-variable {
+  color: #fca5a5;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-builtin-name {
+  color: #38bdf8;
+}

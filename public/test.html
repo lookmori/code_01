@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .resource-list {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>静态资源测试</h1>
+    <p>这个页面用于测试静态资源是否能正确加载。</p>
+    
+    <div class="resource-list">
+        <h2>SVG 图像测试</h2>
+        <p>hero-image.svg:</p>
+        <img src="/hero-image.svg" alt="Hero Image">
+        
+        <p>next.svg:</p>
+        <img src="/next.svg" alt="Next.js Logo">
+        
+        <p>vercel.svg:</p>
+        <img src="/vercel.svg" alt="Vercel Logo">
+    </div>
+    
+    <h2>路径测试</h2>
+    <ul>
+        <li><a href="/_next/static/chunks/main-app-52a4ebe9e60d793b.js">测试 _next/static 路径</a></li>
+        <li><a href="/monaco-editor/">测试 monaco-editor 目录</a></li>
+    </ul>
+</body>
+</html> 
