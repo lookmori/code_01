@@ -68,11 +68,11 @@ export class User {
   })
   updatedAt!: Date;
 
-  // 与评论的关系 - 使用类型字符串避免循环依赖
+  // 与评论的关系
   @OneToMany('Comment', 'user')
   comments!: any[];
 
-  // 与提交的关系 - 使用类型字符串避免循环依赖
+  // 与提交的关系
   @OneToMany('Submission', 'user')
   submissions!: any[];
 

@@ -6,6 +6,19 @@ import { Comment, User } from '@/db/entities';
 // 将路由标记为动态
 export const dynamic = 'force-dynamic';
 
+// 定义简化版的用户信息接口
+interface SimplifiedUser {
+  id: string;
+  username: string;
+}
+
+// 定义简化版的评论接口
+interface SimplifiedComment {
+  id: string;
+  content: string;
+  user?: SimplifiedUser;
+}
+
 /**
  * 获取评论回复
  * GET /api/comments/replies?commentId=xxx
@@ -50,19 +63,24 @@ export async function GET(request: NextRequest) {
         });
         
         // 处理引用的评论
-        let quotedComment = null;
+        let quotedComment: SimplifiedComment | null = null;
         if (reply.quotedCommentId) {
-          quotedComment = await commentRepository.findOne({
+          const quotedCommentEntity = await commentRepository.findOne({
             where: { id: reply.quotedCommentId },
             select: ['id', 'content', 'userId']
           });
           
-          if (quotedComment) {
+          if (quotedCommentEntity) {
             // 获取被引用评论的作者
             const quotedUser = await userRepository.findOne({
-              where: { id: quotedComment.userId },
+              where: { id: quotedCommentEntity.userId },
               select: ['id', 'username']
             });
+            
+            quotedComment = {
+              id: quotedCommentEntity.id,
+              content: quotedCommentEntity.content
+            };
             
             if (quotedUser) {
               quotedComment.user = {
@@ -73,18 +91,16 @@ export async function GET(request: NextRequest) {
           }
         }
         
-        return {
+        const simplifiedReply = {
           ...reply,
           user: user ? {
             id: user.id,
             username: user.username
           } : undefined,
-          quotedComment: quotedComment ? {
-            id: quotedComment.id,
-            content: quotedComment.content,
-            user: quotedComment.user
-          } : undefined
+          quotedComment: quotedComment
         };
+        
+        return simplifiedReply;
       })
     );
 

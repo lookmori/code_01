@@ -4,8 +4,8 @@ import {
   Column, 
   CreateDateColumn, 
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToOne
 } from 'typeorm';
 
 @Entity('comments')
@@ -21,10 +21,6 @@ export class Comment {
   })
   problemId!: string;
 
-  @ManyToOne('Problem', 'comments')
-  @JoinColumn({ name: 'problem_id' })
-  problem!: any;
-
   @Column({ 
     type: 'uuid', 
     name: 'user_id',
@@ -32,10 +28,6 @@ export class Comment {
     comment: '评论用户ID' 
   })
   userId!: string;
-
-  @ManyToOne('User', 'comments')
-  @JoinColumn({ name: 'user_id' })
-  user!: any;
 
   @Column({ 
     type: 'text', 
@@ -77,7 +69,7 @@ export class Comment {
   })
   parentId!: string | null;
 
-  @ManyToOne('Comment', 'comments')
+  @ManyToOne('Comment', 'parentComment')
   @JoinColumn({ name: 'parent_id' })
   parentComment!: any;
 

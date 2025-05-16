@@ -8,6 +8,19 @@ import { IsNull } from 'typeorm';
 // JWT密钥
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+// 定义简化版的用户信息接口
+interface SimplifiedUser {
+  id: string;
+  username: string;
+}
+
+// 定义简化版的评论接口
+interface SimplifiedComment {
+  id: string;
+  content: string;
+  user?: SimplifiedUser;
+}
+
 /**
  * 获取评论列表
  * GET /api/comments?problemId=xxx
@@ -53,19 +66,24 @@ export async function GET(request: NextRequest) {
         });
         
         // 处理引用的评论
-        let quotedComment = null;
+        let quotedComment: SimplifiedComment | null = null;
         if (comment.quotedCommentId) {
-          quotedComment = await commentRepository.findOne({
+          const quotedCommentEntity = await commentRepository.findOne({
             where: { id: comment.quotedCommentId },
-            select: ['id', 'content']
+            select: ['id', 'content', 'userId']
           });
           
           // 获取被引用评论的作者
-          if (quotedComment) {
+          if (quotedCommentEntity) {
             const quotedUser = await userRepository.findOne({
-              where: { id: quotedComment.userId },
+              where: { id: quotedCommentEntity.userId },
               select: ['id', 'username']
             });
+            
+            quotedComment = {
+              id: quotedCommentEntity.id,
+              content: quotedCommentEntity.content
+            };
             
             if (quotedUser) {
               quotedComment.user = {
@@ -76,18 +94,16 @@ export async function GET(request: NextRequest) {
           }
         }
         
-        return {
+        const simplifiedComment = {
           ...comment,
           user: user ? {
             id: user.id,
             username: user.username
           } : undefined,
-          quotedComment: quotedComment ? {
-            id: quotedComment.id,
-            content: quotedComment.content,
-            user: quotedComment.user
-          } : undefined
+          quotedComment
         };
+        
+        return simplifiedComment;
       })
     );
 
@@ -207,18 +223,23 @@ export async function POST(request: NextRequest) {
     });
     
     // 获取引用的评论信息
-    let quotedComment = null;
+    let quotedComment: SimplifiedComment | null = null;
     if (quotedCommentId) {
-      quotedComment = await commentRepository.findOne({
+      const quotedCommentEntity = await commentRepository.findOne({
         where: { id: quotedCommentId },
         select: ['id', 'content', 'userId']
       });
       
-      if (quotedComment) {
+      if (quotedCommentEntity) {
         const quotedUser = await userRepository.findOne({
-          where: { id: quotedComment.userId },
+          where: { id: quotedCommentEntity.userId },
           select: ['id', 'username']
         });
+        
+        quotedComment = {
+          id: quotedCommentEntity.id,
+          content: quotedCommentEntity.content
+        };
         
         if (quotedUser) {
           quotedComment.user = {
@@ -238,11 +259,7 @@ export async function POST(request: NextRequest) {
           id: user.id,
           username: user.username
         } : undefined,
-        quotedComment: quotedComment ? {
-          id: quotedComment.id,
-          content: quotedComment.content,
-          user: quotedComment.user
-        } : undefined
+        quotedComment
       }
     });
   } catch (error: any) {

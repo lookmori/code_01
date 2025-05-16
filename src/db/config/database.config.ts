@@ -13,8 +13,16 @@ export const dbConfig: DataSourceOptions = {
   password: process.env.DB_PASSWORD || '3364487975lfp.',
   database: process.env.DB_NAME || 'learn_platform',
   entities: [User, Problem, Comment, Submission],
-  synchronize: false, // 关闭自动同步，避免修改数据库结构
-  logging: true
+  synchronize: true, // 打开自动同步，以创建数据库表结构
+  logging: true,
+  // 添加额外配置
+  cache: false,
+  dropSchema: false, // 不要在每次连接时删除已有的数据库架构
+  migrationsRun: false, // 不自动运行迁移
+  metadataTableName: 'typeorm_metadata',
+  extra: {
+    connectionLimit: 10
+  }
 };
 
 // 创建数据库连接
